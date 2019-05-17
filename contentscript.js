@@ -6,6 +6,20 @@ let runTimeSelector = "#lk-container > lk-explore-dataflux > lk-explore-header >
     ,fromCacheSelector = "#lk-container > lk-explore-dataflux > lk-explore-header > lk-title-hint > span.title-stats > span:nth-child(3)"
     ,queryIsRunning = false
 
+function checkResults(){
+    // might have finished, check again!
+    let spinnerElem = document.querySelector(spinnerSelector)
+    if(!spinnerElem || !spinnerElem.innerHTML){
+        console.log("QUery may have *actually* completed...?!?!")
+        queryIsRunning = false
+        let runtime = document.querySelector(runTimeSelector)
+        if(runtime && runtime.innerText) {
+            chrome.runtime.sendMessage({timeToRun: runtime.innerText}, function(response) {
+                console.log("Message response: " + response.msg)
+            })
+        }
+    }
+}
 
 window.onload = function(){
     console.log("Page loaded, content script running...")
@@ -14,11 +28,6 @@ window.onload = function(){
         // console.log('got mutations...')
         let spinnerElem = null
         spinnerElem = document.querySelector(spinnerSelector)
-        if(spinnerElem && spinnerElem.innerHTML){
-            // console.log('spinner has html')
-        } else {
-            // console.log('spinner null or has no html')
-        }
         for(var mutation of mutationsList) {
             let runtime = null, cacheElem = null
             if(spinnerElem && spinnerElem.innerHTML && !queryIsRunning){
@@ -34,15 +43,18 @@ window.onload = function(){
                     if(!runtime.innerText.match(/\d/) ){ 
                         console.log('time is just "s"...')} 
                     else {
-                        console.log("Query completed; time = " + runtime.innerText)
-                        chrome.runtime.sendMessage({timeToRun: runtime.innerText}, function(response) {
-                            console.log("Message response: " + response.msg)
-                        })
-                        
-                        cacheElem = document.querySelector(fromCacheSelector)
-                        if(cacheElem && cacheElem.getAttribute('aria-hidden') == 'false'){
-                            console.log("Query completed; served from cache.")
-                        }
+                        // wait a bit then check and send message
+                        setTimeout(checkResults, 500)
+
+                        // console.log("Query completed; time = " + runtime.innerText)
+                        // chrome.runtime.sendMessage({timeToRun: runtime.innerText}, function(response) {
+                        //     console.log("Message response: " + response.msg)
+                        // })
+
+                        // cacheElem = document.querySelector(fromCacheSelector)
+                        // if(cacheElem && cacheElem.getAttribute('aria-hidden') == 'false'){
+                        //     console.log("Query completed; served from cache.")
+                        // }
                     }
 
                 }

@@ -19,5 +19,6 @@ chrome.runtime.onMessage.addListener(
     })
     notification.onclick = function(){
         chrome.tabs.update(sender.tab.id, {active: true});
+        this.close()
     }
   })
