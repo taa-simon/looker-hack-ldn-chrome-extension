@@ -4,6 +4,7 @@ chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.sync.set({color: '#3aa757'}, function() {
     console.log("The color is green.")
   })
+})
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -15,20 +16,8 @@ chrome.runtime.onMessage.addListener(
     let notification = new Notification('Query Completed', {
       icon: 'img/looker_logo_48.png',
       body: "A query completed in " + request.timeToRun + "; click to view."
+    })
+    notification.onclick = function(){
+        chrome.tabs.update(sender.tab.id, {active: true});
+    }
   })
-  notification.onclick = function(){
-      chrome.tabs.update(sender.tab.id, {active: true});
-  }
-
-  })
-
-  // chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-  //   chrome.declarativeContent.onPageChanged.addRules([{
-  //     conditions: [new chrome.declarativeContent.PageStateMatcher({
-  //       pageUrl: {hostEquals: 'developer.chrome.com'},
-  //     })
-  //     ],
-  //         actions: [new chrome.declarativeContent.ShowPageAction()]
-  //   }])
-  // })
-})

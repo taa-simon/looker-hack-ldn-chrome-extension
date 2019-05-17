@@ -30,19 +30,21 @@ window.onload = function(){
                 runtime = document.querySelector(runTimeSelector)
                 if(queryIsRunning && runtime && runtime.innerText) {
                     queryIsRunning = false
-                    cacheElem = document.querySelector(fromCacheSelector)
-                    if(cacheElem && cacheElem.getAttribute('aria-hidden') == 'false'){
-                        console.log("Query completed; served from cache.")
-                    } else {
-                        if(!runtime.innerText.match(/\d/) ){ 
-                            console.log('time is just "s"...')} 
-                        else {
-                            console.log("Query completed; time = " + runtime.innerText)
-                            chrome.runtime.sendMessage({timeToRun: runtime.innerText}, function(response) {
-                                console.log("Message response: " + response.msg)
-                            })
+
+                    if(!runtime.innerText.match(/\d/) ){ 
+                        console.log('time is just "s"...')} 
+                    else {
+                        console.log("Query completed; time = " + runtime.innerText)
+                        chrome.runtime.sendMessage({timeToRun: runtime.innerText}, function(response) {
+                            console.log("Message response: " + response.msg)
+                        })
+                        
+                        cacheElem = document.querySelector(fromCacheSelector)
+                        if(cacheElem && cacheElem.getAttribute('aria-hidden') == 'false'){
+                            console.log("Query completed; served from cache.")
                         }
                     }
+
                 }
             }
 
