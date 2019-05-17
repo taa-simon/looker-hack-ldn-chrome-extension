@@ -1,0 +1,37 @@
+{
+    "name": "Looker Hack London Extension",
+    "version": "0.1",
+    "description": "Hacking Looker!",
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "notifications",
+        "storage" 
+    ],
+    "manifest_version": 2,
+    "background" : {
+        "scripts" : ["background.js"],
+        "persistent" : false
+    },
+    "content_scripts": [
+        {
+          "matches": ["https://*.looker.com/*"],
+          "js": ["contentScript.js"]
+        }
+    ],
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "img/looker_logo_16.png",
+            "32": "img/looker_logo_32.png",
+            "48": "img/looker_logo_48.png",
+            "128": "img/looker_logo_128.png"
+          }
+    },
+    "icons" : {
+        "16": "img/looker_logo_16.png",
+        "32": "img/looker_logo_32.png",
+        "48": "img/looker_logo_48.png",
+        "128": "img/looker_logo_128.png"
+    }
+  }
