@@ -23,7 +23,6 @@ testNotify.onclick = function(elem) {
         body: "If you see this, notifications are working."
     })
     notification.onclick = function(){
-        // alert("sdfsdf")
-        // chrome.tabs.update(tabs[0].id, {active: true});
+        this.close()    
     }
 }

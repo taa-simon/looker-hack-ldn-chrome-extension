@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener(
       body: "A query completed in " + request.timeToRun + "; click to view."
     })
     notification.onclick = function(){
-        chrome.tabs.update(sender.tab.id, {active: true});
+        chrome.tabs.update(sender.tab.id, {active: true, selected: true});
         this.close()
     }
   })
