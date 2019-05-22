@@ -1,10 +1,15 @@
 'use strict';
 
-chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.sync.set({color: '#3aa757'}, function() {
-    console.log("The color is green.")
-  })
-})
+// chrome.runtime.onInstalled.addListener(function() {
+//   chrome.storage.sync.set({color: '#3aa757'}, function() {
+//     console.log("The color is green.")
+//   })
+// })
+
+function niceTimestamp() {
+  let d = new Date()
+  return '[' + /(..)(:..)(:..)/.exec(d)[0] + '.' + d.getMilliseconds() + ']'
+}
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -13,12 +18,19 @@ chrome.runtime.onMessage.addListener(
                 "from the extension");
     console.log("Message says runtime was " + request.timeToRun)
     sendResponse({msg: "Got your message, query ran in " + request.timeToRun});
-    let notification = new Notification('Query Completed', {
+    let notification = new Notification('Query Completed ' + niceTimestamp, {
       icon: 'img/looker_logo_48.png',
       body: "A query completed in " + request.timeToRun + "; click to view."
     })
     notification.onclick = function(){
         chrome.tabs.update(sender.tab.id, {active: true, selected: true});
+        chrome.windows.update(sender.tab.windowId, {focused: true})
         this.close()
     }
   })
+
+// chrome.webRequest.onCompleted.addListener(function (response) {
+//   // Process the XHR response.
+//   console.log("got XHR response:")
+//   console.log(response)
+// }, {urls: ['https://*.looker.com/api/internal/dataflux/query_tasks*']});

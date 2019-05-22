@@ -16,9 +16,14 @@
 
 let tabs = chrome.tabs.query = { active: true, currentWindow: true }
 
+function niceTimestamp() {
+    let d = new Date()
+    return '[' + /(..)(:..)(:..)/.exec(d)[0] + '.' + d.getMilliseconds() + ']'
+  }
+
 let testNotify = document.getElementById('testNotify')
 testNotify.onclick = function(elem) {
-    var notification = new Notification('Notification Test', {
+    var notification = new Notification('Notification Test ' + niceTimestamp(), {
         icon: 'img/looker_logo_48.png',
         body: "If you see this, notifications are working."
     })

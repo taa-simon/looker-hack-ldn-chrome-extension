@@ -6,18 +6,21 @@
         "activeTab",
         "tabs",
         "notifications",
-        "storage" 
+        "storage" ,
+        "webRequest",
+        "https://*.looker.com/*"
     ],
     "manifest_version": 2,
     "background" : {
         "scripts" : ["background.js"],
-        "persistent" : false
+        "persistent" : true
     },
     "content_scripts": [
         {
-          "matches": ["https://*.looker.com/*"],
-          "js": ["contentScript.js"]
-        }
+            "matches": ["https://*.looker.com/*"],
+            "js": ["cs2.js"],
+            "run_at": "document_start"
+          } 
     ],
     "browser_action": {
         "default_popup": "popup.html",
